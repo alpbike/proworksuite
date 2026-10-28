@@ -24,10 +24,10 @@ jobs:
       - name: Build Web Application
         run: npm run build
 
-      - name: Install & Initialize Capacitor
+      - name: Setup Capacitor Config & Platform
         run: |
           npx cap init ProWorkSuite com.proworksuite.app --web-dir dist
-          npx cap add android
+          npx cap add android || true
           npx cap copy
 
       - name: Set up Java JDK
