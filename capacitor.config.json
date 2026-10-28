@@ -1,0 +1,8 @@
+{
+  "appId": "com.proworksuite.app",
+  "appName": "ProWorkSuite",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
