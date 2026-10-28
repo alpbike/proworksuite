@@ -2,7 +2,7 @@ name: Build Android APK
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -11,30 +11,30 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/package-node@v4
         with:
           node-version: 18
 
-      - name: Install Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
       - name: Install Dependencies
-        run: npm ci || npm install
+        run: npm install
 
-      - name: Build Web Assets
+      - name: Build Web Application
         run: npm run build
 
-      - name: Add Android Platform
-        run: npx cap add android
+      - name: Install & Initialize Capacitor
+        run: |
+          npx cap init ProWorkSuite com.proworksuite.app --web-dir dist
+          npx cap add android
+          npx cap copy
 
-      - name: Sync Capacitor
-        run: npx cap sync android
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
       - name: Build APK with Gradle
         run: |
@@ -43,7 +43,7 @@ jobs:
           ./gradlew assembleDebug
 
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ProWorkSuite-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
